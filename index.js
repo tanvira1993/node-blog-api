@@ -18,9 +18,6 @@ mongoose.connection.on('error',(error)=>{
     console.log("error connection",error)
 })
 
-require('./models/user')
-require('./models/post')
-
 app.use(cors());
 app.use(express.json())
 app.get("/", (req, res) => {
