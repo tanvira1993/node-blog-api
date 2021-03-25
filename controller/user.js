@@ -1,7 +1,7 @@
 const bcrypt = require('bcryptjs')
 const User = require("../models/User")
 const jwt = require('jsonwebtoken')
-const {JWT_SECRET} = require('../config/config')
+const {SECRET_KEY} = require('../config/config')
 
 exports.signup = (req,res) =>{
     const {name,email,password} = req.body 
@@ -22,7 +22,7 @@ exports.signup = (req,res) =>{
               })      
               user.save()
               .then(user=>{
-                  res.json({user,message:"saved successfully"})
+                  res.json({data:user,message:"saved successfully"})
               })
               .catch(err=>{
                   console.log(err)
@@ -48,7 +48,7 @@ exports.signup = (req,res) =>{
             bcrypt.compare(password,savedUser.password)
             .then(match=>{
                 if(match){
-                   const token = jwt.sign({_id:savedUser._id},JWT_SECRET)
+                   const token = jwt.sign({_id:savedUser._id,email: savedUser.email,},SECRET_KEY)
                    const {_id,name,email} = savedUser
                    res.json({token,user:{_id,name,email}})
                 }
