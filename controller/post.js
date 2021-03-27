@@ -41,7 +41,7 @@ exports.comment = (req, res, next) => {
       if (err) {
         return res.status(422).json({ error: err });
       } else {
-        res.json(result);
+        return res.status(200).json(result);
       }
     });
 };
@@ -119,7 +119,7 @@ exports.posts = (req, res, next) => {
     .populate("comments.postedBy", "_id name")
     .sort("-createdAt")
     .then((posts) => {
-      res.json({ posts });
+      return res.status(200).json({ posts });
     })
     .catch((err) => {
       console.log(err);

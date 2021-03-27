@@ -38,22 +38,22 @@ exports.signup = (req,res) =>{
   exports.login= (req,res) =>{
         const {email,password} = req.body
         if(!email || !password){
-           return res.status(422).json({error:"please fill email or password"})
+           return res.status(401).json({error:"please fill email or password"})
         }
         User.findOne({email:email})
         .then(savedUser=>{
             if(!savedUser){
-               return res.status(422).json({error:"Invalid Email or password"})
+               return res.status(401).json({error:"Invalid Email or password"})
             }
             bcrypt.compare(password,savedUser.password)
             .then(match=>{
                 if(match){
                    const token = jwt.sign({_id:savedUser._id,email: savedUser.email,},SECRET_KEY)
                    const {_id,name,email} = savedUser
-                   res.json({token,user:{_id,name,email}})
+                   return res.status(200).json({token,user:{_id,name,email}})
                 }
                 else{
-                    return res.status(422).json({error:"Invalid Email or password"})
+                    return res.status(401).json({error:"Invalid Email or password"})
                 }
             })
             .catch(err=>{
